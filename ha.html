@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Culture Showcase</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background: #f8f1e5 url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+      margin: 0;
+      padding: 0;
+    }
+
+    .auth-container {
+      max-width: 400px;
+      margin: 80px auto;
+      background: #fffdf6;
+      padding: 30px;
+      border-radius: 10px;
+      border: 1px solid #c2b280;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .auth-container h2 {
+      color: #5c3a21;
+      margin-bottom: 20px;
+    }
+
+    .auth-container input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #8b6a4d;
+      border-radius: 8px;
+    }
+
+    .auth-container button {
+      padding: 12px 20px;
+      background: #8b6a4d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .auth-container button:hover {
+      background: #a97c50;
+    }
+
+    .auth-container a {
+      color: #5c3a21;
+      text-decoration: none;
+    }
+
+    .auth-container a:hover {
+      text-decoration: underline;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .card {
+      background: #fffdf6;
+      border: 1px solid #c2b280;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .card h3 {
+      padding: 10px;
+      color: #5c3a21;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+    }
+
+    .modal-content {
+      margin: 10% auto;
+      display: block;
+      max-width: 80%;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .close {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-container">
+    <h2>Explore Cultures</h2>
+    <input type="text" id="cultureInput" placeholder="Enter culture (Indian/Western)">
+    <input type="number" id="decadeInput" placeholder="Enter decade (1980, 1990...)">
+    <button onclick="renderCards()">Explore</button>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+
+  <div id="myModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImg">
+  </div>
+
+  <script>
+    const exampleHeadings = {
+      indian: {
+        food: ["Biryani", "Dosa", "Pav Bhaji", "Lassi"],
+        fashion: ["Saree", "Kurta Pajama", "Salwar Kameez", "Lungi"],
+        dance: ["Bharatanatyam", "Kathak", "Kuchipudi", "Odissi"],
+        games: ["Gilli Danda", "Kabaddi", "Lattu", "Carrom"],
+        music: ["Classical Raga", "Bhajan", "Folk Songs", "Shehnai"]
+      },
+      western: {
+        food: ["Hamburger", "Hot Dog", "Mac & Cheese", "Steak"],
+        fashion: ["Denim Jacket", "Leg Warmers", "Leather Pants", "Band T-Shirts"],
+        dance: ["Breakdance", "Disco", "Jazz", "Moonwalk"],
+        games: ["Pac-Man", "Tetris", "Donkey Kong", "Atari"],
+        music: ["Rock", "Pop", "Synthwave", "Jazz Funk"]
+      }
+    };
+
+    function renderCards() {
+      const culture = document.getElementById('cultureInput').value.toLowerCase();
+      const decade = document.getElementById('decadeInput').value;
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = '';
+
+      if (!exampleHeadings[culture]) {
+        alert("Culture not found. Try 'Indian' or 'Western'.");
+        return;
+      }
+
+      const sections = Object.keys(exampleHeadings[culture]);
+
+      sections.forEach(section => {
+        const items = exampleHeadings[culture][section];
+        items.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'card';
+
+          const image = document.createElement('img');
+          const keyword = `${item},${section},${culture}`;
+          image.src = `https://source.loremflickr.comsss/400x300/?${encodeURIComponent(keyword)}`;
+          image.alt = item;
+          image.onerror = function() {
+            this.src = "https://via.placeholder.com/400x300?text=No+Image";
+          };
+          image.onclick = function() {
+            openModal(this.src);
+          };
+
+          const heading = document.createElement('h3');
+          heading.textContent = item;
+
+          card.appendChild(image);
+          card.appendChild(heading);
+          gallery.appendChild(card);
+        });
+      });
+    }
+
+    function openModal(src) {
+      const modal = document.getElementById('myModal');
+      const modalImg = document.getElementById('modalImg');
+      modal.style.display = "block";
+      modalImg.src = src;
+    }
+
+    function closeModal() {
+      document.getElementById('myModal').style.display = "none";
+    }
+  </script>
+
+</body>
+</html>

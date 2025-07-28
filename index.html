@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<head>
+  <title>PastEchoes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel&family=Georgia&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Georgia', serif;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      background: url('https://www.transparenttextures.com/patterns/paper-fibers.png'), #f8f1e5;
+      color: #3e2f1c;
+      line-height: 1.6;
+      margin-top: 70px;
+    }
+    header {
+      background: url('https://img.freepik.com/free-photo/wooden-floor-background_53876-88628.jpg?semt=ais_hybrid&w=740') center/cover no-repeat;
+      color: #fff8e1;
+      padding: 60px 20px;
+      text-align: center;
+      text-shadow: 1px 1px 4px #000;
+      border-bottom: 5px solid #5c3a21;
+    }
+    header h1 {
+      font-size: 3em;
+      font-family: 'Cinzel', serif;
+    }
+    nav {
+      background: #5c3a21;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 10px;
+      border-bottom: 2px dashed #c2b280;
+      z-index: 999;
+    }
+    nav a {
+      color: #fdf6e3;
+      text-decoration: none;
+      margin: 5px 15px;
+      padding: 10px 15px;
+      border-radius: 25px;
+      background: #8b6a4d;
+      transition: background 0.3s, transform 0.3s;
+      font-weight: bold;
+    }
+    nav a:hover {
+      background: #a97c50;
+      transform: scale(1.05);
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 20px;
+      background-color: #f0e6d2;
+    }
+    select, button {
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid #8b6a4d;
+      font-size: 16px;
+      background-color: #fff9ed;
+      color: #3e2f1c;
+      transition: 0.3s;
+    }
+    button:hover, select:hover {
+      background-color: #e5d4b4;
+    }
+    .category {
+      margin: 40px auto;
+      max-width: 1200px;
+      padding: 20px;
+      border-top: 2px dashed #8b6a4d;
+    }
+    .category h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2em;
+      color: #5c3a21;
+      font-family: 'Cinzel', serif;
+    }
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: #fffdf6;
+      border: 1px solid #c2b280;
+      border-radius: 12px;
+      box-shadow: 3px 3px 8px rgba(92, 58, 33, 0.2);
+      padding: 15px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 20px rgba(60, 40, 20, 0.2);
+    }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid #c2b280;
+      cursor: pointer;
+    }
+    .card strong {
+      font-size: 16px;
+      color: #5c3a21;
+    }
+    .card p {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .pagination {
+      text-align: center;
+      margin: 30px auto;
+    }
+    .pagination button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #8b6a4d;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .pagination button:hover {
+      background-color: #a97c50;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #3e2f1c;
+      color: #fff9ed;
+      font-family: 'Georgia', serif;
+    }
+
+    /* Image Modal */
+    #imageModal {
+      position: fixed;
+      z-index: 9999;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    #imageModal .modal-content {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #fff;
+      animation: zoomIn 0.4s ease;
+    }
+    #closeModal {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 10000;
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PastEchoes</h1>
+  </header>
+
+  <nav>
+    <a href="#food">Food</a>
+    <a href="#fashion">Fashion</a>
+    <a href="#dance">Dance</a>
+    <a href="#games">Games</a>
+    <a href="#music">Music</a>
+    <a href="login.html" style="margin-left:auto;">Login</a>
+    <a href="signup.html">Sign Up</a>
+  </nav>
+
+  <div class="controls">
+    <select id="decadeSelect">
+      <option value="1980">1980s</option>
+      <option value="1990">1990s</option>
+      <option value="2000">2000s</option>
+      <option value="2010">2010s</option>
+      <option value="2020">2020s</option>
+    </select>
+    <select id="cultureSelect">
+      <option value="indian">Indian</option>
+      <option value="western">Western</option>
+    </select>
+  </div>
+
+  <div class="pagination">
+    <button onclick="changeDecade(-1)">&laquo; Previous Decade</button>
+    <button onclick="changeDecade(1)">Next Decade &raquo;</button>
+  </div>
+
+  <div id="content"></div>
+
+  <!-- Image Modal -->
+  <div id="imageModal">
+    <span id="closeModal">&times;</span>
+    <img class="modal-content" id="modalImg">
+  </div>
+
+  <footer>
+    <p>&copy; 2025 PastEchoes. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const imageData = {
+      food: ["", "", "", ""],
+      fashion: ["", "", "", ""],
+      dance: ["", "", "", ""],
+      games: ["", "", "", ""],
+      music: ["", "", "", ""]
+    };
+
+    const decades = [1980, 1990, 2000, 2010, 2020];
+  let currentDecadeIndex = 0;
+  const cultures = ['western', 'indian'];
+  let currentCulture = document.getElementById("cultureSelect").value;
+
+  const exampleHeadings = {
+      indian: {
+        1980: {
+          food: ["Biryani", "Dosa", "Pav Bhaji", "Lassi"],
+          fashion: ["Saree", "Kurta Pajama", "Salwar Kameez", "Lungi"],
+          dance: ["Bharatanatyam", "Kathak", "Kuchipudi", "Odissi"],
+          games: ["Gilli Danda", "Kabaddi", "Lattu", "Carrom"],
+          music: ["Classical Raga", "Bhajan", "Folk Songs", "Shehnai"]
+        },
+        1990: {
+          food: ["Butter Chicken", "Chole Bhature", "Vada Pav", "Rasgulla"],
+          fashion: ["Lehenga", "Jeans with Kurti", "Pathani Suit", "Dupatta Styles"],
+          dance: ["Garba", "Lavani", "Bhangra", "Kalbelia"],
+          games: ["Snake & Ladder", "Kho Kho", "Carrom", "Cricket (gully)"],
+          music: ["Bollywood 90s", "IndiPop", "Qawwali", "Remixes"]
+        },
+        2000: {
+          food: ["Paneer Tikka", "Pizza (Indian style)", "Momos", "Chaat"],
+          fashion: ["Kurti with Leggings", "Low-rise Jeans", "Capris", "Bandanas"],
+          dance: ["Fusion", "Freestyle", "Bollywood", "Contemporary"],
+          games: ["PS2", "Counter Strike", "Mobile Cricket", "Snake Game"],
+          music: ["Bollywood Hits", "Hip Hop India", "Rock Fusion", "Sufi Pop"]
+        },
+        2010: {
+          food: ["Shawarma", "Wraps", "Burger (Desi)", "Ice Cream Rolls"],
+          fashion: ["Palazzos", "Anarkali", "Bomber Jackets", "Torn Jeans"],
+          dance: ["Hip Hop", "Contemporary", "Bollywood Fusion", "Zumba"],
+          games: ["PUBG", "Subway Surfers", "Angry Birds", "Temple Run"],
+          music: ["EDM India", "Lofi Bollywood", "Rap", "Mashups"]
+        },
+        2020: {
+          food: ["Sushi", "Avocado Toast", "Bubble Tea", "Thali"],
+          fashion: ["Oversized T-shirts", "Streetwear", "Saree with Sneakers", "Croptops"],
+          dance: ["Reels Trends", "Freestyle", "Urban Choreography", "Dance Challenges"],
+          games: ["BGMI", "Among Us", "Call of Duty Mobile", "Valorant"],
+          music: ["Indie Pop", "Lofi Beats", "Desi Trap", "Bollywood Loops"]
+        }
+      },
+      western: {
+        1980: {
+          food: ["Hamburger", "Hot Dog", "Mac & Cheese", "Steak"],
+          fashion: ["Denim Jacket", "Leg Warmers", "Leather Pants", "Band T-Shirts"],
+          dance: ["Breakdance", "Disco", "Jazz", "Moonwalk"],
+          games: ["Pac-Man", "Tetris", "Donkey Kong", "Atari"],
+          music: ["Rock", "Pop", "Synthwave", "Jazz Funk"]
+        },
+        1990: {
+          food: ["Pizza", "Bagel", "Taco Bell", "Chicken Nuggets"],
+          fashion: ["Windbreakers", "Overalls", "Bucket Hats", "Platform Shoes"],
+          dance: ["Hip Hop", "House", "Techno", "Pop Locking"],
+          games: ["Super Mario", "Sonic", "Street Fighter", "Game Boy"],
+          music: ["Grunge", "Eurodance", "Hip Hop", "Boy Bands"]
+        },
+        2000: {
+          food: ["Sushi", "Frozen Yogurt", "Nachos", "Smoothies"],
+          fashion: ["Low-rise Jeans", "Hoodies", "Cargo Pants", "Graphic Tees"],
+          dance: ["Crunk", "Pop", "Urban", "Freestyle"],
+          games: ["Halo", "Sims", "GTA", "Need for Speed"],
+          music: ["R&B", "Electro Pop", "Alternative Rock", "Hip Hop"]
+        },
+        2010: {
+          food: ["Cupcakes", "Burgers", "Macarons", "Cold Brew"],
+          fashion: ["Skinny Jeans", "Bomber Jackets", "Crop Tops", "Chinos"],
+          dance: ["Dubstep", "Tutting", "Contemporary", "Shuffle"],
+          games: ["Minecraft", "Fortnite", "Roblox", "GTA V"],
+          music: ["Trap", "Dubstep", "EDM", "Pop Rock"]
+        },
+        2020: {
+          food: ["Plant-Based Burgers", "Ramen", "Keto Meals", "Smoothie Bowls"],
+          fashion: ["Oversized Hoodies", "Y2K", "Streetwear", "Athleisure"],
+          dance: ["TikTok Trends", "Urban", "Heels Dance", "Locking"],
+          games: ["Among Us", "Valorant", "Elden Ring", "CoD Warzone"],
+          music: ["Bedroom Pop", "Synthpop", "Chillhop", "Hyperpop"]
+        }
+      }
+    };
+
+    const contentDiv = document.getElementById("content");
+
+  function renderCards(decade, culture) {
+    contentDiv.innerHTML = '';
+    const data = exampleHeadings[culture][decade];
+
+    for (const section in data) {
+      const categoryDiv = document.createElement("div");
+      categoryDiv.className = "category";
+      categoryDiv.id = section;
+
+      const title = document.createElement("h2");
+      title.textContent = `${section.charAt(0).toUpperCase() + section.slice(1)} - ${culture} ${decade}s`;
+      categoryDiv.appendChild(title);
+
+      const cardContainer = document.createElement("div");
+      cardContainer.className = "card-container";
+
+      const items = data[section];
+
+      for (let i = 0; i < items.length; i++) {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const keyword = `${items[i]},${section},${culture},${decade}`;
+        const image = document.createElement("img");
+        image.src = `https://source.unsplash.com/400x300/?${encodeURIComponent(keyword)}`;
+        image.alt = `${items[i]} image`;
+
+        image.addEventListener("click", () => {
+          document.getElementById("modalImg").src = image.src;
+          document.getElementById("imageModal").style.display = "flex";
+        });
+
+        const heading = document.createElement("strong");
+        heading.textContent = items[i];
+
+        const description = document.createElement("p");
+        description.textContent = "";
+
+        card.appendChild(image);
+        card.appendChild(heading);
+        card.appendChild(description);
+        cardContainer.appendChild(card);
+      }
+
+      categoryDiv.appendChild(cardContainer);
+      contentDiv.appendChild(categoryDiv);
+    }
+  }
+
+  function changeDecade(step) {
+    currentDecadeIndex += step;
+    if (currentDecadeIndex < 0) currentDecadeIndex = 0;
+    if (currentDecadeIndex >= decades.length) currentDecadeIndex = decades.length - 1;
+    const newDecade = decades[currentDecadeIndex];
+    document.getElementById("decadeSelect").value = newDecade;
+    renderCards(newDecade, currentCulture);
+  }
+
+  document.getElementById("decadeSelect").addEventListener("change", (e) => {
+    const selected = e.target.value;
+    currentDecadeIndex = decades.indexOf(parseInt(selected));
+    renderCards(selected, currentCulture);
+  });
+
+  document.getElementById("cultureSelect").addEventListener("change", (e) => {
+    currentCulture = e.target.value;
+    renderCards(decades[currentDecadeIndex], currentCulture);
+  });
+
+  // Modal close handlers
+  document.getElementById("closeModal").onclick = () => {
+    document.getElementById("imageModal").style.display = "none";
+  };
+  document.getElementById("imageModal").addEventListener("click", (e) => {
+    if (e.target.id === "imageModal") {
+      document.getElementById("imageModal").style.display = "none";
+    }
+  });
+
+  renderCards(decades[currentDecadeIndex], currentCulture);
+</script>
+</body>
+</html>
