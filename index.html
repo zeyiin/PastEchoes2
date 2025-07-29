@@ -234,15 +234,15 @@
   </footer>
 
   <script>
-    const imageData = {
-      food: ["", "", "", ""],
-      fashion: ["", "", "", ""],
-      dance: ["", "", "", ""],
-      games: ["", "", "", ""],
-      music: ["", "", "", ""]
-    };
+  const imageData = {
+    food: ["", "", "", ""],
+    fashion: ["", "", "", ""],
+    dance: ["", "", "", ""],
+    games: ["", "", "", ""],
+    music: ["", "", "", ""]
+  };
 
-    const decades = [1980, 1990, 2000, 2010, 2020];
+  const decades = [1980, 1990, 2000, 2010, 2020];
   let currentDecadeIndex = 0;
   const cultures = ['western', 'indian'];
   let currentCulture = document.getElementById("cultureSelect").value;
@@ -327,53 +327,58 @@
     const contentDiv = document.getElementById("content");
 
   function renderCards(decade, culture) {
-    contentDiv.innerHTML = '';
-    const data = exampleHeadings[culture][decade];
+  contentDiv.innerHTML = '';
+  const data = exampleHeadings[culture][decade];
 
-    for (const section in data) {
-      const categoryDiv = document.createElement("div");
-      categoryDiv.className = "category";
-      categoryDiv.id = section;
+  for (const section in data) {
+    const categoryDiv = document.createElement("div");
+    categoryDiv.className = "category";
+    categoryDiv.id = section;
 
-      const title = document.createElement("h2");
-      title.textContent = `${section.charAt(0).toUpperCase() + section.slice(1)} - ${culture} ${decade}s`;
-      categoryDiv.appendChild(title);
+    const title = document.createElement("h2");
+    title.textContent = `${section.charAt(0).toUpperCase() + section.slice(1)} - ${culture} ${decade}s`;
+    categoryDiv.appendChild(title);
 
-      const cardContainer = document.createElement("div");
-      cardContainer.className = "card-container";
+    const cardContainer = document.createElement("div");
+    cardContainer.className = "card-container";
 
-      const items = data[section];
+    const items = data[section];
 
-      for (let i = 0; i < items.length; i++) {
-        const card = document.createElement("div");
-        card.className = "card";
+    for (let i = 0; i < items.length; i++) {
+      const card = document.createElement("div");
+      card.className = "card";
 
-        const keyword = `${items[i]},${section},${culture},${decade}`;
-        const image = document.createElement("img");
-        image.src = `https://source.loremflickr.com/400x300/?${encodeURIComponent(keyword)}`;
-        image.alt = `${items[i]} image`;
+      const keyword = `${items[i]},${section},${culture},${decade}`;
+      const image = document.createElement("img");
+      image.src = `https://source.pixels.com/400x300/?${encodeURIComponent(keyword)}`;
+      image.alt = `${items[i]} image`;
 
-        image.addEventListener("click", () => {
-          document.getElementById("modalImg").src = image.src;
-          document.getElementById("imageModal").style.display = "flex";
-        });
+      image.onerror = () => {
+        image.src = 'https://via.placeholder.com/400x300?text=Image+Not+Found';
+      };
 
-        const heading = document.createElement("strong");
-        heading.textContent = items[i];
+      image.addEventListener("click", () => {
+        document.getElementById("modalImg").src = image.src;
+        document.getElementById("imageModal").style.display = "flex";
+      });
 
-        const description = document.createElement("p");
-        description.textContent = "";
+      const heading = document.createElement("strong");
+      heading.textContent = items[i];
 
-        card.appendChild(image);
-        card.appendChild(heading);
-        card.appendChild(description);
-        cardContainer.appendChild(card);
-      }
+      const description = document.createElement("p");
+      description.textContent = ""; // Optional: add real descriptions if needed
 
-      categoryDiv.appendChild(cardContainer);
-      contentDiv.appendChild(categoryDiv);
+      card.appendChild(image);
+      card.appendChild(heading);
+      card.appendChild(description);
+      cardContainer.appendChild(card);
     }
+
+    categoryDiv.appendChild(cardContainer);
+    contentDiv.appendChild(categoryDiv);
   }
+}
+
 
   function changeDecade(step) {
     currentDecadeIndex += step;
@@ -405,6 +410,7 @@
     }
   });
 
+  // Initial render
   renderCards(decades[currentDecadeIndex], currentCulture);
 </script>
 </body>
